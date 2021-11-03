@@ -53,29 +53,49 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // final List<Transaction> _transactions = [];
+
   final List<Transaction> _transactions = [
     Transaction(
-      id: '1',
-      title: 'Tênis de corrida',
-      value: 310.99,
-      date: DateTime.now().subtract(Duration(days: 3)),
+      id: Random().nextDouble().toString(),
+      title: 'Tênis Nike',
+      value: 299.9,
+      date: DateTime.now().subtract(Duration(days: 2)),
     ),
     Transaction(
-      id: '2',
+      id: Random().nextDouble().toString(),
       title: 'Conta de luz',
-      value: 211.3,
-      date: DateTime.now().subtract(Duration(days: 4)),
+      value: 265.32,
+      date: DateTime.now().subtract(Duration(days: 1)),
     ),
     Transaction(
-      id: '2',
-      title: 'Cartão de crédito',
-      value: 26511.3,
+      id: Random().nextDouble().toString(),
+      title: 'Cartão de Crédito Nu',
+      value: 465.30,
       date: DateTime.now(),
     ),
     Transaction(
-      id: '2',
-      title: 'Comida',
-      value: 4553.3,
+      id: Random().nextDouble().toString(),
+      title: 'Almoço',
+      value: 78,
+      date: DateTime.now().subtract(Duration(days: 4)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Mercado',
+      value: 96.50,
+      date: DateTime.now().subtract(Duration(days: 4)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Netflix',
+      value: 54.9,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Spotify',
+      value: 39.9,
       date: DateTime.now(),
     ),
   ];
@@ -87,9 +107,9 @@ class _MyHomePageState extends State<MyHomePage> {
         .toList();
   }
 
-  _addTransaction(String title, double value) {
+  _addTransaction(String title, double value, DateTime date) {
     final newTransaction = Transaction(
-      date: DateTime.now(),
+      date: date,
       id: Random().nextDouble().toString(),
       title: title,
       value: value,
@@ -100,19 +120,26 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.of(context).pop();
   }
 
+  _removeTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((tr) => tr.id == id);
+    });
+  }
+
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
-        context: context,
-        builder: (_) {
-          return TransactionForm(onSubmit: _addTransaction);
-        });
+      context: context,
+      builder: (_) {
+        return TransactionForm(onSubmit: _addTransaction);
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Despesas pessoais!!'),
+        title: Text('Despesas pessoais'),
         actions: [
           IconButton(
             onPressed: () => _openTransactionFormModal(context),
@@ -125,7 +152,10 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Chart(recentTransactions: _recentTransactions),
-            TransactionList(transactions: _transactions),
+            TransactionList(
+              transactions: _transactions,
+              onRemove: _removeTransaction,
+            ),
           ],
         ),
       ),
