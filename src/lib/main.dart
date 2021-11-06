@@ -16,7 +16,11 @@ class ExpensesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight
+    ]);
 
     return MaterialApp(
       home: MyHomePage(),
@@ -56,52 +60,52 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // final List<Transaction> _transactions = [];
+  final List<Transaction> _transactions = [];
   bool _showChart = false;
-  final List<Transaction> _transactions = [
-    Transaction(
-      id: Random().nextDouble().toString(),
-      title: 'Tênis Nike',
-      value: 299.9,
-      date: DateTime.now().subtract(Duration(days: 2)),
-    ),
-    Transaction(
-      id: Random().nextDouble().toString(),
-      title: 'Conta de luz',
-      value: 265.32,
-      date: DateTime.now().subtract(Duration(days: 1)),
-    ),
-    Transaction(
-      id: Random().nextDouble().toString(),
-      title: 'Cartão de Crédito Nu',
-      value: 465.30,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: Random().nextDouble().toString(),
-      title: 'Almoço',
-      value: 78,
-      date: DateTime.now().subtract(Duration(days: 4)),
-    ),
-    Transaction(
-      id: Random().nextDouble().toString(),
-      title: 'Mercado',
-      value: 96.50,
-      date: DateTime.now().subtract(Duration(days: 4)),
-    ),
-    Transaction(
-      id: Random().nextDouble().toString(),
-      title: 'Netflix',
-      value: 54.9,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: Random().nextDouble().toString(),
-      title: 'Spotify',
-      value: 39.9,
-      date: DateTime.now(),
-    ),
-  ];
+  // final List<Transaction> _transactions = [
+  //   Transaction(
+  //     id: Random().nextDouble().toString(),
+  //     title: 'Tênis Nike',
+  //     value: 299.9,
+  //     date: DateTime.now().subtract(Duration(days: 2)),
+  //   ),
+  //   Transaction(
+  //     id: Random().nextDouble().toString(),
+  //     title: 'Conta de luz',
+  //     value: 265.32,
+  //     date: DateTime.now().subtract(Duration(days: 1)),
+  //   ),
+  //   Transaction(
+  //     id: Random().nextDouble().toString(),
+  //     title: 'Cartão de Crédito Nu',
+  //     value: 465.30,
+  //     date: DateTime.now(),
+  //   ),
+  //   Transaction(
+  //     id: Random().nextDouble().toString(),
+  //     title: 'Almoço',
+  //     value: 78,
+  //     date: DateTime.now().subtract(Duration(days: 4)),
+  //   ),
+  //   Transaction(
+  //     id: Random().nextDouble().toString(),
+  //     title: 'Mercado',
+  //     value: 96.50,
+  //     date: DateTime.now().subtract(Duration(days: 4)),
+  //   ),
+  //   Transaction(
+  //     id: Random().nextDouble().toString(),
+  //     title: 'Netflix',
+  //     value: 54.9,
+  //     date: DateTime.now(),
+  //   ),
+  //   Transaction(
+  //     id: Random().nextDouble().toString(),
+  //     title: 'Spotify',
+  //     value: 39.9,
+  //     date: DateTime.now(),
+  //   ),
+  // ];
 
   List<Transaction> get _recentTransactions {
     return _transactions
@@ -140,15 +144,28 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    bool _isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     final appBar = AppBar(
       title: Text('Despesas pessoais'),
       actions: [
+        if (_isLandscape)
+          IconButton(
+            onPressed: () => {
+              setState(() {
+                _showChart = !_showChart;
+              })
+            },
+            icon: Icon(_showChart ? Icons.list : Icons.bar_chart),
+          ),
         IconButton(
           onPressed: () => _openTransactionFormModal(context),
           icon: Icon(Icons.add),
-        )
+        ),
       ],
     );
+
     final availableHeight = MediaQuery.of(context).size.height -
         appBar.preferredSize.height -
         MediaQuery.of(context).padding.top;
@@ -159,28 +176,14 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Exibir gráfico'),
-                Switch(
-                  value: _showChart,
-                  onChanged: (value) {
-                    setState(() {
-                      _showChart = value;
-                    });
-                  },
-                ),
-              ],
-            ),
-            if (_showChart)
-              Container(
-                height: availableHeight * 0.3,
+            if (_showChart || !_isLandscape)
+              SizedBox(
+                height: availableHeight * (_isLandscape ? 0.7 : 0.3),
                 child: Chart(recentTransactions: _recentTransactions),
               ),
-            if (!_showChart)
-              Container(
-                height: availableHeight * 0.7,
+            if (!_showChart || !_isLandscape)
+              SizedBox(
+                height: availableHeight * (_isLandscape ? 0.7 : 0.7),
                 child: TransactionList(
                   transactions: _transactions,
                   onRemove: _removeTransaction,
