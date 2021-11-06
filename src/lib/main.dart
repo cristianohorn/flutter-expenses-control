@@ -60,52 +60,52 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transactions = [];
+  // final List<Transaction> _transactions = [];
   bool _showChart = false;
-  // final List<Transaction> _transactions = [
-  //   Transaction(
-  //     id: Random().nextDouble().toString(),
-  //     title: 'Tênis Nike',
-  //     value: 299.9,
-  //     date: DateTime.now().subtract(Duration(days: 2)),
-  //   ),
-  //   Transaction(
-  //     id: Random().nextDouble().toString(),
-  //     title: 'Conta de luz',
-  //     value: 265.32,
-  //     date: DateTime.now().subtract(Duration(days: 1)),
-  //   ),
-  //   Transaction(
-  //     id: Random().nextDouble().toString(),
-  //     title: 'Cartão de Crédito Nu',
-  //     value: 465.30,
-  //     date: DateTime.now(),
-  //   ),
-  //   Transaction(
-  //     id: Random().nextDouble().toString(),
-  //     title: 'Almoço',
-  //     value: 78,
-  //     date: DateTime.now().subtract(Duration(days: 4)),
-  //   ),
-  //   Transaction(
-  //     id: Random().nextDouble().toString(),
-  //     title: 'Mercado',
-  //     value: 96.50,
-  //     date: DateTime.now().subtract(Duration(days: 4)),
-  //   ),
-  //   Transaction(
-  //     id: Random().nextDouble().toString(),
-  //     title: 'Netflix',
-  //     value: 54.9,
-  //     date: DateTime.now(),
-  //   ),
-  //   Transaction(
-  //     id: Random().nextDouble().toString(),
-  //     title: 'Spotify',
-  //     value: 39.9,
-  //     date: DateTime.now(),
-  //   ),
-  // ];
+  final List<Transaction> _transactions = [
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Tênis Nike',
+      value: 299.9,
+      date: DateTime.now().subtract(Duration(days: 2)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Conta de luz',
+      value: 265.32,
+      date: DateTime.now().subtract(Duration(days: 1)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Cartão de Crédito Nu',
+      value: 465.30,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Almoço',
+      value: 78,
+      date: DateTime.now().subtract(Duration(days: 4)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Mercado',
+      value: 96.50,
+      date: DateTime.now().subtract(Duration(days: 4)),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Netflix',
+      value: 54.9,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: Random().nextDouble().toString(),
+      title: 'Spotify',
+      value: 39.9,
+      date: DateTime.now(),
+    ),
+  ];
 
   List<Transaction> get _recentTransactions {
     return _transactions
@@ -132,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _transactions.removeWhere((tr) => tr.id == id);
     });
   }
-
+  
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -144,8 +144,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final _mediaQuery = MediaQuery.of(context);
     bool _isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+        _mediaQuery.orientation == Orientation.landscape;
 
     final appBar = AppBar(
       title: Text('Despesas pessoais'),
@@ -166,9 +167,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
 
-    final availableHeight = MediaQuery.of(context).size.height -
+    final availableHeight = _mediaQuery.size.height -
         appBar.preferredSize.height -
-        MediaQuery.of(context).padding.top;
+        _mediaQuery.padding.top;
 
     return Scaffold(
       appBar: appBar,
@@ -183,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             if (!_showChart || !_isLandscape)
               SizedBox(
-                height: availableHeight * (_isLandscape ? 0.7 : 0.7),
+                height: availableHeight * (_isLandscape ? 1 : 0.7),
                 child: TransactionList(
                   transactions: _transactions,
                   onRemove: _removeTransaction,
