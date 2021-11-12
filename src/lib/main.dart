@@ -59,7 +59,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   // final List<Transaction> _transactions = [];
   bool _showChart = false;
   final List<Transaction> _transactions = [
@@ -107,6 +107,24 @@ class _MyHomePageState extends State<MyHomePage> {
     ),
   ];
 
+  @override
+  initState() {
+    super.initState();
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
   List<Transaction> get _recentTransactions {
     return _transactions
         .where((element) =>
@@ -132,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _transactions.removeWhere((tr) => tr.id == id);
     });
   }
-  
+
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -145,8 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final _mediaQuery = MediaQuery.of(context);
-    bool _isLandscape =
-        _mediaQuery.orientation == Orientation.landscape;
+    bool _isLandscape = _mediaQuery.orientation == Orientation.landscape;
 
     final appBar = AppBar(
       title: Text('Despesas pessoais'),

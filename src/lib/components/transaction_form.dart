@@ -2,18 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TransactionForm extends StatefulWidget {
-  TransactionForm({Key? key, required this.onSubmit}) : super(key: key);
+  TransactionForm({Key? key, required this.onSubmit}) : super(key: key) {
+    print('contructor TransactionForm');
+  }
 
   final Function(String, double, DateTime) onSubmit;
 
   @override
-  State<TransactionForm> createState() => _TransactionFormState();
+  State<TransactionForm> createState() {
+    print('contructor CreateState');
+    return _TransactionFormState();
+  }
 }
 
 class _TransactionFormState extends State<TransactionForm> {
   final _titleController = TextEditingController();
   final _valueController = TextEditingController();
   late DateTime? _selectedDate = DateTime.now();
+
+  @override
+  initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    print('dispose');
+  }
 
   _submitForm() {
     final title = _titleController.text;
